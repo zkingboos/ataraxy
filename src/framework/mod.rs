@@ -1,19 +1,21 @@
 use ataraxy_macros::command_ide_arg_support;
 use serenity::builder::{CreateApplicationCommandOption, CreateApplicationCommands};
 
-use serenity::model::interactions::application_command::ApplicationCommandType;
-use serenity::model::interactions::InteractionType;
+use serenity::model::application::command::CommandType;
+use serenity::model::application::interaction::InteractionType;
 
 use serenity::{
     async_trait,
-    model::{gateway::Ready, id::GuildId, interactions::Interaction},
+    model::{gateway::Ready, id::GuildId},
     prelude::{Context as SerenityContext, *},
 };
 
+use serenity::model::application::interaction::Interaction;
+
 use serenity::http::CacheHttp;
-use serenity::model::prelude::application_command::{
-    ApplicationCommand, ApplicationCommandOptionType,
-};
+use serenity::model::application::command::CommandOptionType;
+
+use serenity::model::application::command::Command as ApplicationCommand;
 use std::collections::HashMap;
 
 pub mod command;
@@ -208,7 +210,7 @@ fn create_command(command: &ValidCommand, cmds: &mut CreateApplicationCommands) 
             cmds.create_application_command(|cmd| {
                 cmd.name(&command.name)
                     .description(&command.description)
-                    .kind(ApplicationCommandType::ChatInput)
+                    .kind(CommandType::ChatInput)
                     .set_options(
                         command
                             .arguments
@@ -223,7 +225,7 @@ fn create_command(command: &ValidCommand, cmds: &mut CreateApplicationCommands) 
             cmds.create_application_command(|cmd| {
                 cmd.name(&subcommands.name)
                     .description(&subcommands.description)
-                    .kind(ApplicationCommandType::ChatInput)
+                    .kind(CommandType::ChatInput)
                     .set_options(
                         subcommands
                             .subcommands
@@ -231,7 +233,7 @@ fn create_command(command: &ValidCommand, cmds: &mut CreateApplicationCommands) 
                             .map(|subcommand| match subcommand {
                                 SubCommand::SubCommand(subcmd) => {
                                     let mut c = CreateApplicationCommandOption::default();
-                                    c.kind(ApplicationCommandOptionType::SubCommand)
+                                    c.kind(CommandOptionType::SubCommand)
                                         .name(&subcmd.name)
                                         .description(&subcmd.description);
                                     for arg in &subcmd.arguments.arguments {
@@ -241,13 +243,13 @@ fn create_command(command: &ValidCommand, cmds: &mut CreateApplicationCommands) 
                                 }
                                 SubCommand::SubCommandGroup(subcmdgroup) => {
                                     let mut c = CreateApplicationCommandOption::default()
-                                        .kind(ApplicationCommandOptionType::SubCommandGroup)
+                                        .kind(CommandOptionType::SubCommandGroup)
                                         .name(&subcmdgroup.name)
                                         .description(&subcmdgroup.description)
                                         .clone();
                                     for subcmd in subcmdgroup.subcommands.values() {
                                         c.create_sub_option(|c| {
-                                            c.kind(ApplicationCommandOptionType::SubCommand)
+                                            c.kind(CommandOptionType::SubCommand)
                                                 .name(&subcmd.name)
                                                 .description(&subcmd.description);
                                             for arg in &subcmd.arguments.arguments {

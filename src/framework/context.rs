@@ -1,7 +1,6 @@
 use serenity::http::{CacheHttp, Http};
-use serenity::model::interactions::application_command::ApplicationCommandInteraction;
-use serenity::model::interactions::InteractionResponseType;
-use serenity::model::prelude::InteractionApplicationCommandCallbackDataFlags;
+use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::model::prelude::interaction::InteractionResponseType;
 use serenity::prelude::Context as SerenityContext;
 
 #[derive(Clone)]
@@ -49,10 +48,7 @@ impl Context {
         self.interaction
             .create_interaction_response(&self.serenity_context.http, |res| {
                 res.kind(InteractionResponseType::ChannelMessageWithSource)
-                    .interaction_response_data(|data| {
-                        data.content(msg.into())
-                            .flags(InteractionApplicationCommandCallbackDataFlags::EPHEMERAL)
-                    })
+                    .interaction_response_data(|data| data.content(msg.into()).ephemeral(true))
             })
             .await
             .ok();

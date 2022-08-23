@@ -8,17 +8,20 @@ readme = "README.md"
 license = "MIT"
 repository = "https://github.com/ImpossibleReality/ataraxy"
 keywords = ["discord", "macros"]
-include = [
-    "**/*.rs",
-    "Cargo.toml",
-]
+include = ["**/*.rs", "Cargo.toml"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serenity = { git = "https://github.com/serenity-rs/serenity", default-features=false, features = ["builder", "cache", "client", "gateway", "model", "unstable_discord_api"], version = "0.10" }
+serenity = { version = "0.11.5", default-features = false, features = [
+    "client",
+    "gateway",
+    "rustls_backend",
+    "model",
+    "collector",
+] }
 ataraxy-macros = { path = "./macros", version = "0.1.1" }
-async-trait = "0.1"
+async-trait = "0.1.57"
 
 [workspace]
 members = ["macros"]

@@ -11,9 +11,8 @@ use serenity::builder::CreateApplicationCommandOption;
 use serenity::model::channel::ChannelType as SerenityChannelType;
 use serenity::model::channel::GuildChannel;
 use serenity::model::id::{ChannelId, RoleId, UserId};
-use serenity::model::interactions::application_command::{
-    ApplicationCommandInteractionDataOptionValue, ApplicationCommandOptionType as SerenityKind,
-};
+use serenity::model::application::interaction::application_command::CommandDataOptionValue;
+use serenity::model::application::command::CommandOptionType as SerenityKind;
 use serenity::model::prelude::{Channel, User};
 use std::fmt::Display;
 
@@ -242,16 +241,16 @@ use ArgumentError::*;
 
 impl CommandArgumentValue {
     pub fn from_resolved(
-        resolved: &ApplicationCommandInteractionDataOptionValue,
+        resolved: &CommandDataOptionValue,
     ) -> Result<Self, ArgumentError> {
         Ok(match resolved {
-            ApplicationCommandInteractionDataOptionValue::String(s) => Self::String(s.clone()),
-            ApplicationCommandInteractionDataOptionValue::Integer(i) => Self::Integer(*i),
-            ApplicationCommandInteractionDataOptionValue::Boolean(b) => Self::Boolean(*b),
-            ApplicationCommandInteractionDataOptionValue::User(u, _) => Self::User(u.id),
-            ApplicationCommandInteractionDataOptionValue::Channel(c) => Self::Channel(c.id),
-            ApplicationCommandInteractionDataOptionValue::Role(r) => Self::Role(r.id),
-            ApplicationCommandInteractionDataOptionValue::Number(n) => Self::Number(*n),
+            CommandDataOptionValue::String(s) => Self::String(s.clone()),
+            CommandDataOptionValue::Integer(i) => Self::Integer(*i),
+            CommandDataOptionValue::Boolean(b) => Self::Boolean(*b),
+            CommandDataOptionValue::User(u, _) => Self::User(u.id),
+            CommandDataOptionValue::Channel(c) => Self::Channel(c.id),
+            CommandDataOptionValue::Role(r) => Self::Role(r.id),
+            CommandDataOptionValue::Number(n) => Self::Number(*n),
             _ => return Err(ArgumentError::UnknownIncomingType),
         })
     }
